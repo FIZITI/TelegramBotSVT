@@ -61,7 +61,7 @@ namespace TelegramBot
                     }
                     else
                     {
-                        Console.WriteLine("написал anon");
+                        Console.WriteLine($"anon | написал: {message.Text}");
                     }
 
                     if (message.Text.ToLower().Contains("/start".ToLower()))
@@ -298,7 +298,7 @@ namespace TelegramBot
                 new Dictionary<string, string>
                 {
                     { _responsesPhotosKeys[0], "https://www.google.com/imgres?imgurl=https://ekskursii.by/images/obj1/117/c54he5_9_true.jpg&tbnid=ww5URobN_MbsQM&vet=1&imgrefurl=https://ekskursii.by/?Goroda_Belarusi%3D117_svetlogorsk&docid=FHOVYcakIzdlgM&w=800&h=533&hl=ru-RU&source=sh/x/im/m1/4&kgs=ac0f8ae27ee9da32&shem=abme,ssic,trie \nНа въезде в город." },
-                    { _responsesPhotosKeys[1], "https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.sb.by%2Fupload%2Fiblock%2F8dc%2Fk7p07917hv6fgxum1o2e2y3l9stedonh.jpg&tbnid=xJegvG0YMwI7MM&vet=1&imgrefurl=https%3A%2F%2Fwww.sb.by%2Farticles%2Fdvizhenie-vverkh-svetlogorskii-raion.html&docid=YqPyGCbH36Zo2M&w=1200&h=800&itg=1&hl=ru-RU&source=sh%2Fx%2Fim%2Fm1%2F4&kgs=325484208a8e4e7b&shem=abme%2Cssic%2Ctrie#imgrc=xJegvG0YMwI7MM&imgdii=qkjD1n-6xlrRfM \nНа въезде в город." },
+                    { _responsesPhotosKeys[1], "https://images.app.goo.gl/prsXoEsAWPVGieZ79 https://images.app.goo.gl/x5B6hwVggeRRZkRd6 \nНа въезде в город." },
                     { _responsesPhotosKeys[2], "https://sv-biznes.by/sight/interesnoe/alleya-skameek/ \nУл. 50 лет Октября." },
                     { _responsesPhotosKeys[3], "https://yandex.by/maps/org/prometey/69556779450/?ll=29.727584%2C52.622594&z=12 \nВозле ДКЭ." },
                     { _responsesPhotosKeys[4], "https://sv-biznes.by/sight/interesnoe/gorodskie-chasy/ \nПлощадь города." },
