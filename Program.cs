@@ -8,6 +8,7 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Exceptions;
 
 namespace TelegramBot
 {
@@ -52,48 +53,59 @@ namespace TelegramBot
             {
                 var message = update.Message;
 
-                if (message.Chat.Username != null)
+                try
                 {
-                    Console.WriteLine($"{message.Chat.Username} | написал: {message.Text}");
-                }
-                else
-                {
-                    Console.WriteLine("написал anon");
-                }
-
-                if (message.Text.ToLower().Contains("/start".ToLower()))
-                {
-                    await SendMessage(botClient, message.Chat.Id, "Привет. Выберите опцию:", _reaplyFirstMenuKeyboard);
-                    return;
-                }
-                else if (message.Text.ToLower().Contains(_backToMenu.ToLower()))
-                {
-                    await SendMessage(botClient, message.Chat.Id, "Возврат к главному меню", _reaplyFirstMenuKeyboard);
-                }
-                else
-                {
-                    foreach (var button in _buttonResponses)
+                    if (message.Chat.Username != null)
                     {
-                        if (message.Text == button.Key)
-                        {
-                            await SendMessage(botClient, message.Chat.Id, $"Ты выбрал {button.Key}", button.Value);
-                            return;
-                        }
+                        Console.WriteLine($"{message.Chat.Username} | написал: {message.Text}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("написал anon");
                     }
 
-                    foreach (var dictionary in _reaplyMenuAnswers)
+                    if (message.Text.ToLower().Contains("/start".ToLower()))
                     {
-                        foreach (var key in dictionary)
+                        await SendMessage(botClient, message.Chat.Id, "Привет. Выберите опцию:", _reaplyFirstMenuKeyboard);
+                        return;
+                    }
+                    else if (message.Text.ToLower().Contains(_backToMenu.ToLower()))
+                    {
+                        await SendMessage(botClient, message.Chat.Id, "Возврат к главному меню", _reaplyFirstMenuKeyboard);
+                    }
+                    else
+                    {
+                        foreach (var button in _buttonResponses)
                         {
-                            if (message.Text == key.Key)
+                            if (message.Text == button.Key)
                             {
-                                await SendMessage(botClient, message.Chat.Id, key.Value);
+                                await SendMessage(botClient, message.Chat.Id, $"Ты выбрал {button.Key}", button.Value);
                                 return;
                             }
                         }
-                    }
 
-                    await SendMessage(botClient, message.Chat.Id, "Не понял тебя");
+                        foreach (var dictionary in _reaplyMenuAnswers)
+                        {
+                            foreach (var key in dictionary)
+                            {
+                                if (message.Text == key.Key)
+                                {
+                                    await SendMessage(botClient, message.Chat.Id, key.Value);
+                                    return;
+                                }
+                            }
+                        }
+
+                        await SendMessage(botClient, message.Chat.Id, "Не понял тебя");
+                    }
+                }
+                catch (ApiRequestException apiEx) when (apiEx.ErrorCode == 403)
+                {
+                    Console.WriteLine($"Bot was blocked by the user: {message.Chat.Id}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
                 }
             }
         }
@@ -120,9 +132,6 @@ namespace TelegramBot
                 AllowedUpdates = new[] { UpdateType.Message }
             };
             _client.StartReceiving(Update, Error, receiverOptions);
-
-            Stream stream = System.IO.File.OpenRead("C:/Users/User/FProject/TelegramBot/Photos/bye.png");
-            _photo = InputFile.FromStream(stream);
 
             _responsesKeys = new[] { "ХРАМЫ, КОСТЕЛЫ", "МУЗЕИ, ВЫСТАВОЧНЫЕ ЗАЛЫ", "КАФЕ,РЕСТОРАНЫ", "АКТИВНЫЙ ОТДЫХ, РАЗВЛЕЧЕНИЕ", "ПАМЯТНИКИ, МЕМОРИАЛЫ", "ФОТОЗОНЫ",};
             _responsesTemplesKeys = new[] { "Костел Вознесения Святого Креста", "Храм Преображения Господня", "Храм во имя Кирилла Туровского", "Церковь Благодать", "Храм святителя Николая Чудотворца", "Часовня Дионисия Полоцкого", "Церковь Двенадцати апостолов", "Новоапостольская церковь", "Церковь Петра и Павла",};
